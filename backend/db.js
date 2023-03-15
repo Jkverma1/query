@@ -11,7 +11,7 @@ const connectMySQL = () => {
     if (err) {
       console.log("DB Connection Failed");
     } else {
-      // console.log(result[0].name);
+      console.log("DB Connection established!");
       return result;
     }
   });
