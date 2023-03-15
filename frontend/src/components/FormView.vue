@@ -9,7 +9,11 @@
           {{ data.searchBox.queryText }}
         </h3>
       </div>
-      <form class="formContainer_form" @submit.prevent="search">
+      <form
+        class="formContainer_form"
+        @submit.prevent="search"
+        @submit="data.searchBox.searching = true"
+      >
         <input
           type="text"
           class="formContainer_form_input"
@@ -20,6 +24,13 @@
           <i class="bi bi-search formContainer_form_search-icon"></i>
         </button>
       </form>
+      <p v-if="data.searchBox.searching">
+        <span class="loader-text"
+          >Searching databases and services for "{{ keyword }}"
+          <span class="loader__dot">.</span><span class="loader__dot">.</span
+          ><span class="loader__dot">.</span></span
+        >
+      </p>
     </div>
   </div>
 </template>
@@ -28,6 +39,7 @@
 import data from "../../json";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../assets/css/style.css";
+import { promiseTimeout } from "@vueuse/core";
 export default {
   name: "FormView",
   data() {
@@ -37,7 +49,9 @@ export default {
     };
   },
   methods: {
-    search() {
+    async search() {
+      await promiseTimeout(3000);
+      data.searchBox.searching = false;
       const newQuery = this.keyword.split(" ").join("-");
       this.$router.push({
         name: "Result",
